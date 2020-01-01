@@ -40,7 +40,6 @@ infra-pull:
 connect-build:
 	@$(DOCKER_COMPOSE_CONNECT) build
 
-
 # Install all the dependencies - i.e. pull all images required and build all images. TODO: Also get gradle dependencies
 .PHONY: install-dependencies
 install-dependencies: pull-curl infra-pull connect-build;
@@ -68,7 +67,9 @@ infra-%: infra-pull
 .PHONY: infra-deploy-wait
 infra-deploy-wait: connect-build
 	@echo Waiting for $(HOST):22 to become available...
-	@$(ALPINE) sh -c 'while ! nc -z $(HOST) 22; do sleep 1; done; echo $(HOST):22 available'
+	@$(CONNECT) sh -c 'while ! nc -z $(HOST) 22; do sleep 1; done; echo $(HOST):22 available'
+	@echo Waiting for ssh login to succeed...
+	@$(CONNECT) sh -c '$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND); while ! $(SSH_CONNECT_COMMAND) exit; do sleep 1; done; echo ssh login succeeded'
 
 .PHONY: infra-test
 infra-test: infra-pull connect-build
