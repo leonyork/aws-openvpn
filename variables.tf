@@ -2,7 +2,7 @@ variable "region" {
   default = "us-east-1"
 }
 variable "instance_type" {
-  default = "t3a.nano"
+  default = "t3a.micro"
 }
 variable "ami_owner" {
 }

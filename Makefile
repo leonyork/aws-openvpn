@@ -14,6 +14,7 @@ CONNECT=$(DOCKER_COMPOSE_CONNECT) -p instance-connect run ssh
 SSH_ADD_TO_KNOWN_HOSTS_COMMAND=$(shell $(INFRA_DEPLOYMENT_OUTPUT) ssh_add_to_known_hosts)
 SSH_CONNECT_COMMAND=$(shell $(INFRA_DEPLOYMENT_OUTPUT) ssh_connect_command)
 HOST=$(shell $(INFRA_DEPLOYMENT_OUTPUT) public_ip)
+VPN_PORT=$(shell $(INFRA_DEPLOYMENT_OUTPUT) vpn_port)
 MY_IP=$(shell $(CURL) -s $(CHECK_IP_URL))
 ACCESS_CIDR=$(MY_IP)/32
 
@@ -70,10 +71,8 @@ infra-deploy-wait: connect-build
 	@$(CONNECT) sh -c 'while ! nc -z $(HOST) 22; do sleep 1; done; echo $(HOST):22 available'
 	@echo Waiting for ssh login to succeed...
 	@$(CONNECT) sh -c '$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND); while ! $(SSH_CONNECT_COMMAND) exit; do sleep 1; done; echo ssh login succeeded'
-
-.PHONY: infra-test
-infra-test: infra-pull connect-build
-	$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND) 'echo connected as \$$(whoami)'"
+	@echo Waiting for $(HOST):$(VPN_PORT) to become available...
+	@$(CONNECT) sh -c 'while ! nc -uz $(HOST) $(VPN_PORT); do sleep 1; done; echo $(HOST):$(VPN_PORT) available'
 
 .PHONY: connect
 connect: infra-pull connect-build

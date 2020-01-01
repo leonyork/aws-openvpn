@@ -10,3 +10,6 @@ output "ssh_add_to_known_hosts" {
 output "ssh_connect_command" {
   value = "ssh ${var.ssh_user}@${aws_instance.instance.public_ip}"
 }
+output "vpn_port" {
+  value = "${var.vpn_port}"
+}
