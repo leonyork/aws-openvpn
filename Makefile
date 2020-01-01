@@ -78,7 +78,3 @@ infra-test: infra-pull connect-build
 .PHONY: connect
 connect: infra-pull connect-build
 	$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND)"
-
-.PHONY: connect-log
-connect-log: connect-build
-	$(CONNECT) sh -c "cat ~/.ssh/id_rsa && cat ~/.ssh/id_rsa.pub"

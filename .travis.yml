@@ -18,7 +18,6 @@ install:
   - make install-dependencies
 script:
   - make deploy
-  - make connect-log
   - make infra-deploy-wait
   - make infra-test
 after_script:
