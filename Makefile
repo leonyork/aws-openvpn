@@ -13,6 +13,7 @@ CONNECT=$(DOCKER_COMPOSE_CONNECT) -p instance-connect run ssh
 
 SSH_ADD_TO_KNOWN_HOSTS_COMMAND=$(shell $(INFRA_DEPLOYMENT_OUTPUT) ssh_add_to_known_hosts)
 SSH_CONNECT_COMMAND=$(shell $(INFRA_DEPLOYMENT_OUTPUT) ssh_connect_command)
+HOST=$(shell $(INFRA_DEPLOYMENT_OUTPUT) public_ip)
 MY_IP=$(shell $(CURL) -s $(CHECK_IP_URL))
 ACCESS_CIDR=$(MY_IP)/32
 
@@ -63,6 +64,11 @@ infra-deploy-sh: infra-pull
 .PHONY: infra-%
 infra-%: infra-pull
 	@$(INFRA_DEPLOYMENT_OUTPUT) $*
+
+.PHONY: infra-deploy-wait
+infra-deploy-wait: connect-build
+	@echo Waiting for $(HOST):22 to become available...
+	@$(ALPINE) sh -c 'while ! nc -z $(HOST) 22; do sleep 1; done; echo $(HOST):22 available'
 
 .PHONY: infra-test
 infra-test: infra-pull connect-build

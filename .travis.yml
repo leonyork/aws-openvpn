@@ -19,6 +19,7 @@ install:
 script:
   - make deploy
   - make connect-log
+  - make infra-deploy-wait
   - make infra-test
 after_script:
   - make destroy
