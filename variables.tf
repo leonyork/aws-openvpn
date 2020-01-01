@@ -2,7 +2,7 @@ variable "region" {
   default = "us-east-1"
 }
 variable "instance_type" {
-  default = "t3a.micro"
+  default = "t3a.nano"
 }
 variable "ami_owner" {
 }
@@ -18,4 +18,13 @@ variable "ssh_public_key_location" {
 }
 variable "ssh_access_cidr" {
   description = "The ip cidr that will be allowed to SSH in"
+}
+variable "vpn_protocol" {
+  description = "The protocol for the VPN to work over. Valid values are udp or tcp"
+  default = "udp"
+}
+variable "vpn_port" {
+  description = "The port for the VPN to listen on"
+  type = number
+  default = 1194
 }

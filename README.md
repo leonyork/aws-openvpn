@@ -1,6 +1,4 @@
-# Deploy a linux instance to AWS
-
-[![Build Status](https://travis-ci.com/leonyork/aws-linux-instance.svg?branch=master)](https://travis-ci.com/leonyork/aws-linux-instance)
+# Deploy a VPN server
 
 Use [Terraform](https://www.terraform.io/) to create the server.
 
@@ -23,3 +21,9 @@ You'll need make, docker and docker-compose installed. You'll need an AWS accoun
 Once you've deployed the infrastructure:
 
 ```make connect```
+
+### Get the client configuration
+
+Once you've deployed the infrastructure:
+
+```make client.ovpn```

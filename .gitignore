@@ -1,3 +1,6 @@
 ### Terraform ###
 /terraform.tfstate*
 /.terraform*
+
+### Open VPN ###
+client.ovpn

@@ -78,3 +78,12 @@ infra-test: infra-pull connect-build
 .PHONY: connect
 connect: infra-pull connect-build
 	$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND)"
+
+# Get the configuration from the server
+.PHONY: openvpn-client-conf
+openvpn-client-conf: infra-pull connect-build
+	$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND) sudo cat /root/client.ovpn"
+
+# Get the configuration from the server and save it to a file (e.g. make client.ovpn creates the file client.ovpn)
+%.ovpn: infra-pull connect-build
+	$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND) sudo cat /root/client.ovpn" > $@
