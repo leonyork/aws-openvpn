@@ -13,6 +13,7 @@ env:
     - MAKEFLAGS="-j 4 ACCESS_CIDR=0.0.0.0/0"
 before_install:
   - sudo apt-get -y install make
+  - ssh-keygen -t rsa -b 4096 -C "Testing" -f ~/.ssh/id_rsa -N ""
 install:
   - make install-dependencies
 script:

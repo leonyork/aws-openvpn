@@ -61,3 +61,7 @@ infra-%: infra-pull
 .PHONY: infra-test
 infra-test: infra-pull
 	$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND) 'echo connected as \$$(whoami)'"
+
+.PHONY: connect
+connect: infra-pull
+	$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND)"

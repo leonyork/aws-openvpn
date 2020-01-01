@@ -1,8 +1,10 @@
 # Deploy a linux instance to AWS
 
+[![Build Status](https://travis-ci.com/leonyork/aws-linux-instance.svg?branch=master)](https://travis-ci.com/leonyork/aws-linux-instance)
+
 Use [Terraform](https://www.terraform.io/) to create the server.
 
-Assumes that you have a public/private key pair generated in ~/.ssh with the public key name id_rsa.pub.
+Assumes that you have a public/private key pair generated in ~/.ssh with the public key name id_rsa.pub. See .travis.yml install section if you need to generate one.
 
 ## Infrastructure
 
@@ -15,3 +17,9 @@ You'll need make, docker and docker-compose installed. You'll need an AWS accoun
 ### Destroy
 
 ```make infra-destroy```
+
+### Connect
+
+Once you've deployed the infrastructure:
+
+```make connect```
