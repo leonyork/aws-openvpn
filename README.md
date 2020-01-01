@@ -1,5 +1,7 @@
 # Deploy a VPN server
 
+[![Build Status](https://travis-ci.com/leonyork/aws-openvpn.svg?branch=master)](https://travis-ci.com/leonyork/aws-openvpn)
+
 Use [Terraform](https://www.terraform.io/) to create the server.
 
 Assumes that you have a public/private key pair generated in ~/.ssh with the public key name id_rsa.pub. See .travis.yml install section if you need to generate one.
