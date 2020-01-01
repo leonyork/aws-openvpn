@@ -19,6 +19,6 @@ install:
 script:
   - make deploy
   - make infra-deploy-wait
-  - make infra-test
+  - make client.ovpn
 after_script:
   - make destroy
