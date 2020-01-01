@@ -34,9 +34,15 @@ pull-curl:
 infra-pull:
 	@$(DOCKER_COMPOSE_INFRA) pull --quiet
 
+# Pull the Docker images required for infra
+.PHONY: connect-build
+connect-build:
+	@$(DOCKER_COMPOSE_CONNECT) build
+
+
 # Install all the dependencies - i.e. pull all images required and build all images. TODO: Also get gradle dependencies
 .PHONY: install-dependencies
-install-dependencies: pull-curl infra-pull ;
+install-dependencies: pull-curl infra-pull connect-build;
 
 # Deploy to AWS
 .PHONY: infra-deploy
@@ -59,9 +65,13 @@ infra-%: infra-pull
 	@$(INFRA_DEPLOYMENT_OUTPUT) $*
 
 .PHONY: infra-test
-infra-test: infra-pull
+infra-test: infra-pull connect-build
 	$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND) 'echo connected as \$$(whoami)'"
 
 .PHONY: connect
-connect: infra-pull
+connect: infra-pull connect-build
 	$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND)"
+
+.PHONY: connect-log
+connect-log: connect-build
+	$(CONNECT) sh -c "cat ~/.ssh/id_rsa && cat ~/.ssh/id_rsa.pub"

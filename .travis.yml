@@ -18,6 +18,7 @@ install:
   - make install-dependencies
 script:
   - make deploy
+  - make connect-log
   - make infra-test
 after_script:
   - make destroy
