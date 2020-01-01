@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  ssh:
+    build:
+      context: .
+      args:
+        # From .env file
+        - "ALPINE_VERSION=${ALPINE_VERSION}"
+    user: root
+    volumes:
+      - ~/.ssh:/root/.ssh
