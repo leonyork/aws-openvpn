@@ -60,6 +60,11 @@ infra-destroy: infra-pull
 infra-deploy-sh: infra-pull  
 	$(INFRA) --entrypoint /bin/sh deploy
 
+# Validate the terraform files required for infra
+.PHONY: infra-validate
+infra-validate: infra-pull
+	$(INFRA) --entrypoint /bin/sh deploy -c 'terraform init -input=false -backend=false && terraform validate' 
+
 # Get the outputs from the infra deployment (e.g. make .infra-host gets the host)
 .PHONY: infra-%
 infra-%: infra-pull

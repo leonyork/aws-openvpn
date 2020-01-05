@@ -21,14 +21,14 @@ resource "aws_security_group" "vpn" {
   name        = "vpn-${random_uuid.security_group_unique_id.result}"
   description = "Allow SSH and VPN"
   # Add to the default VPC for now - if required change to be a different VPC
-  #vpc_id      = "${aws_vpc.main.id}"
+  #vpc_id      = aws_vpc.main.id
 
   # SSH
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${var.ssh_access_cidr}"]
+    cidr_blocks = [var.ssh_access_cidr]
   }
 
   # VPN
@@ -74,7 +74,7 @@ data "aws_ami" "ami" {
 resource "aws_instance" "instance" {
   ami           = data.aws_ami.ami.id
   instance_type = var.instance_type
-  security_groups = ["${aws_security_group.vpn.name}"]
+  security_groups = [aws_security_group.vpn.name]
 
   lifecycle {
     create_before_destroy = true
