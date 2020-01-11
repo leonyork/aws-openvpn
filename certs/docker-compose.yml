@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  easyrsa:
+    build: .
+    environment: 
+      - "EASYRSA=/root/certs"
+      - "EASYRSA_VARS_FILE=/root/vars"
+    volumes:
+      - ./build:/root/certs
+      - ./vars:/root/vars
