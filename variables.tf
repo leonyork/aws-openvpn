@@ -8,6 +8,9 @@ variable "ami_owner" {
 }
 variable "ami_name" {
 }
+variable "docker_compose_version" {
+  
+}
 variable "ssh_user" {
   description = "The user to ssh in as"
   default = "root"
@@ -21,10 +24,8 @@ variable "ssh_access_cidr" {
 }
 variable "vpn_protocol" {
   description = "The protocol for the VPN to work over. Valid values are udp or tcp"
-  default = "udp"
 }
 variable "vpn_port" {
   description = "The port for the VPN to listen on"
   type = number
-  default = 1194
 }

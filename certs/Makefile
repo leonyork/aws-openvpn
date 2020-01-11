@@ -17,13 +17,14 @@ build/x509-types: .make/.build
 	$(EASYRSA_SH) -c 'cp -rf /usr/share/easy-rsa/x509-types ./'
 
 # Init the PKI
-build/pki: build/openssl-easyrsa.cnf
-	$(EASYRSA) init-pki
-	$(EASYRSA_SH) -c 'dd if=/dev/urandom of=pki/.rnd bs=256 count=1'
+.PRECIOUS: .make/.pki
+.make/.pki: .make/.build
+	$(EASYRSA_SH) -c 'mkdir -p pki/private pki/reqs && dd if=/dev/urandom of=pki/.rnd bs=256 count=1'
+	@touch $@
 
 # Build a CA
 .PRECIOUS: build/pki/ca.crt
-build/pki/ca.crt: build/pki
+build/pki/ca.crt: build/openssl-easyrsa.cnf .make/.pki
 	$(EASYRSA) --batch build-ca nopass
 
 # Build a key
@@ -41,24 +42,20 @@ build/pki/issued/%server.crt: build/pki/private/%server.key build/x509-types
 build/pki/issued/%client.crt: build/pki/private/%client.key build/x509-types
 	$(EASYRSA) --batch sign-req client $*client
 
-# Build the DH params
-.PRECIOUS: build/dh.pem
-build/dh.pem: build
-	$(EASYRSA_SH) -c 'openssl dhparam -out dh.pem 2048'
-
 # Get help on a particular command - e.g. make help-build-ca
 .PHONY: sh
 sh: build/openssl-easyrsa.cnf build/x509-types
 	$(EASYRSA_SH)
 
 # Runs the build and creates a .make/.build file so that we have a timestamp for when we last ran the build
-.make/.build: .make Dockerfile docker-compose.yml
+.make/.build: .make/.init Dockerfile docker-compose.yml
 	$(DOCKER_COMPOSE) build --build-arg ALPINE_VERSION=$(ALPINE_VERSION) 
 	@touch $@
 
 # Where we'll store the status of our build
-.make:
+.make/.init:
 	mkdir .make
+	@touch .make/.init
 
 .PHONY: clean
 clean:

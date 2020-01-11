@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+  vpn:
+    image: ${IMAGE_NAME}
+    build: .
+    environment: 
+      PORT: ${PORT}
+      PROTOCOL: ${PROTOCOL}
+      CA_CERT_LOCATION: /certs/ca.crt
+      SERVER_CERT_LOCATION: /certs/server.crt
+      SERVER_KEY_LOCATION: /certs/server.key
+      TLS_CRYPT_KEY_LOCATION: /certs/tc.key
+    ports: 
+      - "${PORT}:${PORT}/${PROTOCOL}"
+    cap_add:
+      - NET_ADMIN
+    volumes: 
+      - /dev/net/tun:/dev/net/tun
+      - ./certs:/certs
+      - /etc/resolv.conf:/etc/resolv.conf

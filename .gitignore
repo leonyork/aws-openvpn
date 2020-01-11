@@ -3,4 +3,4 @@
 /.terraform*
 
 ### Open VPN ###
-client.ovpn
+*.ovpn

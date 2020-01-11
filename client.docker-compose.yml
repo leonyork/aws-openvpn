@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  vpn:
+    build: 
+      context: .
+      dockerfile: client.Dockerfile
+      args: 
+        - ALPINE_VERSION=${ALPINE_VERSION}
+    cap_add:
+      - NET_ADMIN
+    working_dir: /root
+    volumes: 
+      - /dev/net/tun:/dev/net/tun
+      - ./:/root
+      - /etc/resolv.conf:/etc/resolv.conf

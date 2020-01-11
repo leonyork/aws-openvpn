@@ -24,8 +24,12 @@ Once you've deployed the infrastructure:
 
 ```make connect```
 
-### Get the client configuration
+## Install
 
-Once you've deployed the infrastructure:
+```make install```
 
-```make client.ovpn```
+This will get the VPN server installed on the infrastructure along with certificates
+
+## Create a client configuration
+
+```make vpn-client.ovpn```

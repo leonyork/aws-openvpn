@@ -12,6 +12,9 @@ services:
       - TF_VAR_ami_name=${AMI_NAME}
       - TF_VAR_ssh_public_key_location=/root/.ssh/id_rsa.pub
       - TF_VAR_ssh_user=${SSH_USER}
+      - TF_VAR_vpn_protocol=${SERVER_PROTOCOL}
+      - TF_VAR_vpn_port=${SERVER_PORT}
+      - TF_VAR_docker_compose_version=${DOCKER_COMPOSE_VERSION}
     volumes:
       - .:/app
       - ~/.ssh/id_rsa.pub:/root/.ssh/id_rsa.pub
