@@ -8,8 +8,8 @@ services:
         - ALPINE_VERSION=${ALPINE_VERSION}
     cap_add:
       - NET_ADMIN
-    working_dir: /root
+    working_dir: /root/app
     volumes: 
       - /dev/net/tun:/dev/net/tun
-      - ./:/root
+      - ./:/root/app
       - /etc/resolv.conf:/etc/resolv.conf

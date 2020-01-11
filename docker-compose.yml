@@ -6,7 +6,6 @@ services:
       args:
         # From .env file
         - "ALPINE_VERSION=${ALPINE_VERSION}"
-    user: root
     working_dir: /root/app
     volumes:
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa

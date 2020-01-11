@@ -5,21 +5,22 @@ branches:
     - master
 services:
   - docker
+dist: bionic
 env:
   global:
     # Since Travis is on AWS, it's public IP isn't the address AWS security groups see. 
     # So we need to drop that restriction for Travis - i.e. allow access from everywhere
-    - MAKEFLAGS="ACCESS_CIDR=0.0.0.0/0"
+    - MAKEFLAGS="-j 1 ACCESS_CIDR=0.0.0.0/0"
 before_install:
   - sudo apt-get -y install make
-  - ssh-keygen -t rsa -b 4096 -C "Testing" -f ~/.ssh/id_rsa -N ""
+  - sudo ssh-keygen -t rsa -b 4096 -C "Testing" -f ~/.ssh/id_rsa -N ""
 install:
-  - make install-dependencies
+  - sudo make install-dependencies
 script:
-  - make deploy
-  - make infra-deploy-wait
-  - make server-push
-  - make install
-  - make test
+  - sudo make deploy
+  - sudo make infra-deploy-wait
+  - sudo make server-push
+  - sudo make install
+  - sudo make test
 after_script:
-  - make destroy
+  - sudo make destroy
