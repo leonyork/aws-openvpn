@@ -12,6 +12,7 @@ env:
     # So we need to drop that restriction for Travis - i.e. allow access from everywhere
     - MAKEFLAGS="-j 1 ACCESS_CIDR=0.0.0.0/0"
 before_install:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - sudo apt-get -y install make
   - sudo ssh-keygen -t rsa -b 4096 -C "Testing" -f ~/.ssh/id_rsa -N ""
 install:
