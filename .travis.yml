@@ -7,10 +7,9 @@ services:
   - docker
 env:
   global:
-    # Run builds multi-threaded 
     # Since Travis is on AWS, it's public IP isn't the address AWS security groups see. 
     # So we need to drop that restriction for Travis - i.e. allow access from everywhere
-    - MAKEFLAGS="-j 2 ACCESS_CIDR=0.0.0.0/0"
+    - MAKEFLAGS="ACCESS_CIDR=0.0.0.0/0"
 before_install:
   - sudo apt-get -y install make
   - ssh-keygen -t rsa -b 4096 -C "Testing" -f ~/.ssh/id_rsa -N ""
@@ -19,7 +18,7 @@ install:
 script:
   - make deploy
   - make infra-deploy-wait
-  - make push
+  - make server-push
   - make install
   - make test
 after_script:
