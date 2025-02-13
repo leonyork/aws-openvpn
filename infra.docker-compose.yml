@@ -1,13 +1,14 @@
-version: '3.7'
+version: "3.7"
 services:
   deploy:
     image: hashicorp/terraform:${TERRAFORM_VERSION} # From .env file
     entrypoint: sh -c 'terraform init -input=false && terraform $${0} "$$@"'
     working_dir: /app
     environment:
-      - AWS_SECRET_KEY_ID=${AWS_SECRET_KEY_ID?You must set the environment variable AWS_SECRET_KEY_ID}
-      - AWS_ACCESS_KEY_ID=${AWS_SECRET_KEY_ID}
+      - AWS_SECRET_KEY_ID=${AWS_ACCESS_KEY_ID?You must set the environment variable AWS_ACCESS_KEY_ID}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY?You must set the environment variable AWS_SECRET_ACCESS_KEY}
+      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN?You must set the environment variable AWS_SESSION_TOKEN}
       - TF_VAR_ami_owner=${AMI_OWNER}
       - TF_VAR_ami_name=${AMI_NAME}
       - TF_VAR_ssh_public_key_location=/root/.ssh/id_rsa.pub
@@ -22,4 +23,3 @@ services:
 volumes:
   terraform:
 
-    

@@ -2,7 +2,11 @@ version: '3.7'
 services:
   vpn:
     image: ${IMAGE_NAME}
-    build: .
+    build:
+      context: .
+      args:
+        # From .env file
+        - "ALPINE_VERSION=${ALPINE_VERSION}"
     environment: 
       PORT: ${PORT}
       PROTOCOL: ${PROTOCOL}

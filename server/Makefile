@@ -2,7 +2,7 @@ export IMAGE_NAME=$(IMAGE_NAME)
 export PORT=$(PORT)
 export PROTOCOL=$(PROTOCOL)
 
-export ALPINE_VERSION=3.11.2
+export ALPINE_VERSION=3.17.0
 ALPINE=docker run --rm -v $(CURDIR):/root -w /root alpine:$(ALPINE_VERSION)
 
 DOCKER_COMPOSE=docker-compose

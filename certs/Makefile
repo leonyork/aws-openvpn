@@ -1,4 +1,4 @@
-ALPINE_VERSION=3.11.2
+ALPINE_VERSION=3.17.0
 
 ALPINE=docker run -v $(CURDIR):/root -w /root alpine:$(ALPINE_VERSION)
 DOCKER_COMPOSE=docker-compose
@@ -29,7 +29,7 @@ build/pki/ca.crt: build/openssl-easyrsa.cnf .make/.pki
 
 # Build a key
 .PRECIOUS: build/pki/private/%.key
-build/pki/private/%.key: build/pki/ca.crt
+build/pki/private/%.key: 
 	$(EASYRSA) --batch gen-req $* nopass
 
 # Sign the keys to get a certificate

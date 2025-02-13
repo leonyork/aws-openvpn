@@ -1,7 +1,7 @@
 ARG ALPINE_VERSION
 FROM alpine:${ALPINE_VERSION}
 
-RUN apk add --no-cache openssl openvpn && \
+RUN apk add --no-cache openssl openvpn iptables ip6tables && \
     echo 'net.ipv4.ip_forward=1' > /etc/sysctl.d/30-openvpn-forward.conf && \
     mkdir -p /etc/openvpn/server && \
     openssl dhparam -out /etc/openvpn/server/dh.pem 2048

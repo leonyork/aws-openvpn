@@ -8,7 +8,7 @@ SERVER_PROTOCOL=udp
 export SERVER_PORT
 export SERVER_PROTOCOL
 
-SERVER_IMAGE_VERSION=0.0.2
+SERVER_IMAGE_VERSION=0.0.5
 SERVER_IMAGE_NAME=leonyork/openvpn:${SERVER_IMAGE_VERSION}
 
 MAKE_CERTS=make -C certs
@@ -16,9 +16,9 @@ MAKE_SERVER=make PORT=$(SERVER_PORT) PROTOCOL=$(SERVER_PROTOCOL) IMAGE_NAME=$(SE
 
 ALPINE=docker run --rm -v $(CURDIR):/root -w /root -e HOST=$(HOST) -e SERVER_PORT=$(SERVER_PORT) -e SERVER_PROTOCOL=$(SERVER_PROTOCOL) alpine:$(ALPINE_VERSION)
 
-DOCKER_COMPOSE_INFRA=docker-compose -f infra.docker-compose.yml
-DOCKER_COMPOSE_CONNECT=docker-compose
-DOCKER_COMPOSE_TEST=docker-compose -f client.docker-compose.yml
+DOCKER_COMPOSE_INFRA=docker compose -f infra.docker-compose.yml
+DOCKER_COMPOSE_CONNECT=docker compose
+DOCKER_COMPOSE_TEST=docker compose -f client.docker-compose.yml
 
 CURL=docker run --rm $(CURL_IMAGE)
 
@@ -37,6 +37,10 @@ VPN_PORT=$(shell $(INFRA_DEPLOYMENT_OUTPUT) vpn_port)
 MY_IP=$(shell $(CURL) -s $(CHECK_IP_URL))
 ACCESS_CIDR=$(MY_IP)/32
 TEST=$(DOCKER_COMPOSE_TEST) run vpn
+
+export AWS_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY
+export AWS_SESSION_TOKEN
 
 # Deploys the infrastructure and the application (including building the application). This also includes all tests.
 # Keep this as the top so that running 'make' does the whole deploy.
@@ -70,10 +74,14 @@ install-dependencies: pull-curl infra-pull connect-build;
 infra-deploy: infra-pull pull-curl
 	$(INFRA) deploy apply -input=false -auto-approve -var "ssh_access_cidr=$(ACCESS_CIDR)"
 
+.PHONY: infra-tf-up
+infra-tf-up: infra-pull pull-curl
+	$(INFRA) deploy apply -input=false -auto-approve -var "ssh_access_cidr=$(ACCESS_CIDR)"
+
 # Remove all the resources created by deploying the infrastructure
 .PHONY: infra-destroy
 infra-destroy: infra-pull
-	$(INFRA) deploy destroy -input=false -auto-approve -force -var "ssh_access_cidr=$(ACCESS_CIDR)"
+	$(INFRA) deploy destroy -input=false -auto-approve -var "ssh_access_cidr=$(ACCESS_CIDR)"
 
 # sh into the container - useful for running commands like import or plan
 .PHONY: infra-deploy-sh
@@ -104,9 +112,9 @@ connect: infra-pull connect-build
 # Configure the server
 .PHONY: install
 install: infra-pull connect-build server/certs/server.crt server/certs/server.key server/certs/ca.crt server/certs/tc.key server/docker-compose.yml
-	$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && scp -r server/certs $(SSH_CONNECT_ADDRESS):~/ && scp -r server/docker-compose.yml $(SSH_CONNECT_ADDRESS):~/"
-	$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND) IMAGE_NAME=$(SERVER_IMAGE_NAME) PROTOCOL=$(SERVER_PROTOCOL) PORT=$(SERVER_PORT) docker-compose pull"
-	$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND) IMAGE_NAME=$(SERVER_IMAGE_NAME) PROTOCOL=$(SERVER_PROTOCOL) PORT=$(SERVER_PORT) docker-compose up -d --force-recreate"
+	echo '$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && scp -r server/certs $(SSH_CONNECT_ADDRESS):~/ && scp -r server/docker-compose.yml $(SSH_CONNECT_ADDRESS):~/"'
+	echo '$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND) IMAGE_NAME=$(SERVER_IMAGE_NAME) PROTOCOL=$(SERVER_PROTOCOL) PORT=$(SERVER_PORT) docker composepull"'
+	echo '$(CONNECT) sh -c "$(SSH_ADD_TO_KNOWN_HOSTS_COMMAND) && $(SSH_CONNECT_COMMAND) IMAGE_NAME=$(SERVER_IMAGE_NAME) PROTOCOL=$(SERVER_PROTOCOL) PORT=$(SERVER_PORT) docker composeup -d --force-recreate"'
 
 .PRECIOUS: certs/build/pki/ca.crt
 certs/build/pki/ca.crt:

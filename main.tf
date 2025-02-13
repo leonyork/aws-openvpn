@@ -1,15 +1,24 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "4.45.0"
+    }
+    random = {
+      source = "hashicorp/random"
+      version = "3.4.3"
+    }
+    local = {
+      source = "hashicorp/local"
+      version = "2.2.3"
+    }
+  }
+}
+
+
 provider "aws" {
   region = var.region
-  version = "2.43"
 }
-
-provider "random" {
-  version = "2.2"
-}
-
-provider "local" {
-  version = "1.4"
-} 
 
 data "local_file" "ssh_public_key" {
     filename = var.ssh_public_key_location
